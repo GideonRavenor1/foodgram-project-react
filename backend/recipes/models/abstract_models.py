@@ -5,7 +5,6 @@ class AbstractNamedModel(models.Model):
     name = models.CharField(
         max_length=256,
         verbose_name='Название',
-        unique=True,
     )
 
     class Meta:

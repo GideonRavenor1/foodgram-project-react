@@ -11,13 +11,16 @@ class Ingredient(AbstractNamedModel):
     )
 
     class Meta:
-        ordering = ['name']
+        ordering = ('name',)
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
         constraints = [
             models.UniqueConstraint(
-                fields=['name', 'measurement_unit'], name='unique_ingredient'
-            )
+                fields=(
+                    'name',
+                    'measurement_unit',
+                ), name='unique_ingredient',
+            ),
         ]
         app_label = 'recipes'
 
@@ -33,13 +36,22 @@ class Tag(AbstractNamedModel):
     )
     slug = models.SlugField(
         verbose_name='Слаг',
-        unique=True,
         help_text='Неофициальное имя, часть URL адреса',
     )
 
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('name',),
+                name='unique_tag_name',
+            ),
+            models.UniqueConstraint(
+                fields=('slug',),
+                name='unique_tag_slug',
+            ),
+        ]
         app_label = 'recipes'
 
 
@@ -82,4 +94,10 @@ class Recipe(AbstractNamedModel):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         default_related_name = 'recipes'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('name',),
+                name='unique_recipe_name',
+            ),
+        ]
         app_label = 'recipes'

@@ -10,8 +10,12 @@ class Favorite(AbstractUserRelationModel):
         verbose_name_plural = 'Избранные'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'recipe'], name='unique_favorite'
-            )
+                fields=(
+                    'user',
+                    'recipe',
+                ),
+                name='unique_favorite'
+            ),
         ]
         app_label = 'recipes'
 
@@ -22,9 +26,12 @@ class ShoppingCart(AbstractUserRelationModel):
         verbose_name_plural = 'Списки покупок'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'recipe'],
+                fields=(
+                    'user',
+                    'recipe',
+                ),
                 name='unique_shopping_cart',
-            )
+            ),
         ]
         app_label = 'recipes'
 
@@ -63,4 +70,7 @@ class IngredientAmount(models.Model):
         app_label = 'recipes'
 
     def __str__(self) -> str:
-        return f'{self.recipe.name} {self.ingredient.name} {self.ingredient.measurement_unit}'
+        return (
+            f'{self.recipe.name} {self.ingredient.name} '
+            f'{self.ingredient.measurement_unit}'
+        )

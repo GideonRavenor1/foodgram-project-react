@@ -14,7 +14,7 @@ class Favorite(AbstractUserRelationModel):
                     'user',
                     'recipe',
                 ),
-                name='unique_favorite'
+                name='unique_favorite',
             ),
         ]
         app_label = 'recipes'

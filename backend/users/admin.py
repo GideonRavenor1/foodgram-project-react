@@ -1,8 +1,11 @@
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import User, Follow
+from .models import Follow
+
+User = get_user_model()
 
 
 @admin.register(User)
@@ -29,10 +32,11 @@ class UserAppAdmin(UserAdmin):
                     'email',
                     'password',
                 )
-            }
+            },
         ),
         (
-            _('Permissions'), {
+            _('Permissions'),
+            {
                 'fields': (
                     'is_active',
                     'is_superuser',
@@ -40,7 +44,7 @@ class UserAppAdmin(UserAdmin):
                     'groups',
                     'user_permissions',
                 ),
-            }
+            },
         ),
         (
             _('Important dates'),
@@ -49,7 +53,7 @@ class UserAppAdmin(UserAdmin):
                     'last_login',
                     'date_joined',
                 )
-            }
+            },
         ),
     )
     readonly_fields = (
@@ -58,21 +62,24 @@ class UserAppAdmin(UserAdmin):
     )
     ordering = ('-date_joined',)
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': (
-                'email',
-                'username',
-                'first_name',
-                'last_name',
-                'password1',
-                'password2',
-                'is_superuser',
-                'is_staff',
-                'is_active',
-                'groups',
-            ),
-        }),
+        (
+            None,
+            {
+                'classes': ('wide',),
+                'fields': (
+                    'email',
+                    'username',
+                    'first_name',
+                    'last_name',
+                    'password1',
+                    'password2',
+                    'is_superuser',
+                    'is_staff',
+                    'is_active',
+                    'groups',
+                ),
+            },
+        ),
     )
     list_filter = (
         'id',

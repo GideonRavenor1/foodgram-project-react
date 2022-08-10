@@ -19,7 +19,8 @@ class Ingredient(AbstractNamedModel):
                 fields=(
                     'name',
                     'measurement_unit',
-                ), name='unique_ingredient',
+                ),
+                name='unique_ingredient',
             ),
         ]
         app_label = 'recipes'
@@ -40,6 +41,7 @@ class Tag(AbstractNamedModel):
     )
 
     class Meta:
+        ordering = ('name',)
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
         constraints = [
@@ -90,7 +92,7 @@ class Recipe(AbstractNamedModel):
     )
 
     class Meta:
-        ordering = ['-pub_date']
+        ordering = ('-pub_date',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         default_related_name = 'recipes'

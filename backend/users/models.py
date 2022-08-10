@@ -54,13 +54,13 @@ class Follow(models.Model):
                     'user',
                     'following',
                 ],
-                name='follow_unique'
+                name='follow_unique',
             )
         ]
 
-    def clean(self):
+    def clean(self) -> None:
         if self.user.username == self.following.username:
             raise ValidationError('Нельзя подписаться на самого себя')
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.user.username} - {self.following.username}'

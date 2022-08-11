@@ -89,11 +89,10 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        request = self.context.get('request')
+        request = self.context['request']
         ingredients_data = validated_data.pop('ingredients')
         tags_data = validated_data.pop('tags')
         recipe = Recipe.objects.create(author=request.user, **validated_data)
-        recipe.save()
         recipe.tags.set(tags_data)
         self.bulk_create(recipe, ingredients_data)
         return recipe
@@ -109,6 +108,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.cooking_time = validated_data.pop('cooking_time')
         if validated_data.get('image') is not None:
             instance.image = validated_data.pop('image')
+
         instance.save()
         instance.tags.set(tags_data)
         return instance

@@ -1,8 +1,12 @@
-# build env
-FROM node:13.12.0-alpine as build
+FROM node:13.12.0-alpine as build-stage
 WORKDIR /app
-COPY package*.json ./
+COPY package*.json .
 RUN npm install
-COPY . ./
+COPY . .
 RUN npm run build
-CMD cp -r build result_build
+
+
+FROM nginx:1.8-alpine
+COPY --from=build-stage /app/build /usr/share/nginx/html
+RUN chown nginx.nginx /usr/share/nginx/html/ -R
+EXPOSE 80

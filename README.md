@@ -88,6 +88,6 @@ exit
 
 
 Тестовые данные для входа в админ-панель:
-* admin
+* admin@admin.ru
 * ytrewq1993
 * [Ссылка](http://51.250.110.97/api/admin-page/)

@@ -6,8 +6,6 @@ COPY . .
 RUN npm run build
 
 
-FROM nginx:1.8-alpine
+FROM nginx:1.23.1-alpine
 COPY --from=build-stage /app/build /usr/share/nginx/html
-RUN chown nginx.nginx /usr/share/nginx/html/ -R
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

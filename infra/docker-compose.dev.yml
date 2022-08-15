@@ -4,6 +4,9 @@ services:
   frontend:
     image: ${DOCKER_USERNAME}/yandex-foodgram-frontend:${IMAGE_TAG}
     container_name: yandex-foodgram-frontend
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
     restart: always
     ports:
       - '80:80'
@@ -18,11 +21,16 @@ services:
   backend:
     image: ${DOCKER_USERNAME}/yandex-foodgram-backend:${IMAGE_TAG}
     container_name: yandex-foodgram-backend
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
       - ../data:/data
-    command: bash -c "cd /app && gunicorn --bind 0.0.0.0:8000 --workers 3 config.wsgi:application"
+      - ../backend:/app
+    command: bash -c "cd /app && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+      && gunicorn --bind 0.0.0.0:8000 --workers 3 config.wsgi:application"
     depends_on:
       - postgresql_db
     expose:

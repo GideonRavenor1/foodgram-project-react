@@ -8,11 +8,6 @@ class UsersConfig(AppConfig):
     verbose_name = 'Пользователи'
 
     def ready(self) -> None:
-        """
-        Запуск сигнала
-        :return: None
-        """
-
         from . import signals
 
         request_finished.connect(signals.create_auth_token)

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from recipes.models.basic_models import Ingredient
-from recipes.models.m2m_models import IngredientAmount
+from recipes.models.basic import Ingredient
+from recipes.models.m2m import IngredientAmount
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -12,7 +12,7 @@ class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
-        read_only_fields = '__all__'
+        read_only_fields = ('__all__',)
 
 
 class IngredientAmountSerializer(serializers.ModelSerializer):
@@ -32,10 +32,6 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
 
 
 class CreateIngredientAmountSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор добавления Ингредиентов
-    """
-
     id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
     amount = serializers.IntegerField()
 
@@ -43,8 +39,8 @@ class CreateIngredientAmountSerializer(serializers.ModelSerializer):
         model = IngredientAmount
         fields = ('id', 'amount')
 
-    def validate_amount(self, value):
-        if int(value) <= 0:
+    def validate_amount(self, value) -> int:
+        if value <= 0:
             raise serializers.ValidationError(
                 'Количество ингредиентов должно быть больше 0.'
             )

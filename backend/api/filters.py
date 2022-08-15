@@ -1,19 +1,10 @@
 from django_filters.rest_framework import FilterSet, filters
 from rest_framework.filters import SearchFilter
 
-from recipes.models import Recipe
-
-
-class IngredientSearchFilter(SearchFilter):
-    search_param = 'name'
+from recipes.models.basic import Recipe
 
 
 class RecipeFilter(FilterSet):
-    """
-    Фильтры для сортировки рецептов по:
-    тегам, нахождению в избранном и корзине.
-    """
-
     tags = filters.AllValuesMultipleFilter(field_name='tags__slug')
     is_favorited = filters.BooleanFilter(method='filter_is_favorited')
     is_in_shopping_cart = filters.BooleanFilter(
@@ -33,3 +24,7 @@ class RecipeFilter(FilterSet):
         if value:
             return queryset.filter(carts__user=self.request.user)
         return queryset
+
+
+class IngredientSearchFilter(SearchFilter):
+    search_param = 'name'

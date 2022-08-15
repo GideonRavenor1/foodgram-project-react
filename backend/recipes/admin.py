@@ -1,7 +1,10 @@
 from django.contrib import admin
+from django.contrib.admin import display
+from django.db.models import QuerySet
+from django.http import HttpRequest
 
-from .models.basic_models import Ingredient, Recipe, Tag
-from .models.m2m_models import IngredientAmount, Favorite, ShoppingCart
+from .models.basic import Ingredient, Recipe, Tag
+from .models.m2m import IngredientAmount, Favorite, ShoppingCart
 
 EMPTY_VALUE = '-пусто-'
 
@@ -9,6 +12,7 @@ EMPTY_VALUE = '-пусто-'
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'slug')
+    prepopulated_fields = {'slug': ('name',)}
     empty_value_display = '-пусто-'
 
 
@@ -20,11 +24,39 @@ class IngredientAdmin(admin.ModelAdmin):
     empty_value_display = EMPTY_VALUE
 
 
+class IngredientsInlineAdmin(admin.TabularInline):
+    model = Recipe.ingredients.through
+    extra = 0
+
+
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'author',
+        'name',
+        'image',
+        'text',
+        'subscribers',
+        'all_ingredients',
+    )
+    fields = ()
+    search_fields = ('author', 'name')
     list_filter = ('author', 'name', 'tags')
-    search_fields = ('name',)
+    inlines = (IngredientsInlineAdmin,)
+    list_display_links = ('author',)
     empty_value_display = EMPTY_VALUE
+
+    def subscribers(self, obj: Recipe) -> int:
+        return Favorite.objects.filter(recipe=obj).count()
+
+    @display(description='Ингредиенты')
+    def all_ingredients(self, obj: Recipe) -> str:
+        return ', '.join(obj.ingredients.values_list('name', flat=True))
+
+    def get_queryset(self, request: HttpRequest) -> QuerySet:
+        qs = super().get_queryset(request)
+        return qs.select_related('author').prefetch_related('ingredients')
 
 
 @admin.register(IngredientAmount)

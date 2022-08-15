@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
 from djoser.serializers import UserSerializer as DjoserUserSerializer
 
@@ -8,11 +9,7 @@ User = get_user_model()
 
 
 class CustomUserSerializer(DjoserUserSerializer):
-    """
-    Сериализатор пользователя.
-    """
-
-    is_subscribed = serializers.SerializerMethodField(read_only=True)
+    is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = User
@@ -24,9 +21,11 @@ class CustomUserSerializer(DjoserUserSerializer):
             'last_name',
             'is_subscribed',
         )
+        read_only_fields = ('is_subscribed',)
 
-    def get_is_subscribed(self, obj):
+    @swagger_serializer_method(serializer_or_field=serializers.BooleanField)
+    def get_is_subscribed(self, obj: User) -> bool:
         user = self.context['request'].user
         if user.is_anonymous:
             return False
-        return Follow.objects.filter(user=user, author=obj.id).exists()
+        return Follow.objects.filter(user=user, following=obj.id).exists()

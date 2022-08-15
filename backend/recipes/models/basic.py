@@ -1,7 +1,9 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 
-from .abstract_models import AbstractNamedModel
+from colorfield.fields import ColorField
+
+from .abstract import AbstractNamedModel
 
 
 class Ingredient(AbstractNamedModel):
@@ -30,9 +32,9 @@ class Ingredient(AbstractNamedModel):
 
 
 class Tag(AbstractNamedModel):
-    color = models.CharField(
+    color = ColorField(
         verbose_name='Цвет',
-        max_length=7,
+        default='#FF0000',
         help_text='Цветовой HEX-код',
     )
     slug = models.SlugField(

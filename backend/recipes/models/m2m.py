@@ -1,7 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from .abstract_models import AbstractUserRelationModel
+from .abstract import AbstractUserRelationModel
 
 
 class Favorite(AbstractUserRelationModel):
@@ -17,6 +17,7 @@ class Favorite(AbstractUserRelationModel):
                 name='unique_favorite',
             ),
         ]
+        default_related_name = 'favorites'
         app_label = 'recipes'
 
 
@@ -33,6 +34,7 @@ class ShoppingCart(AbstractUserRelationModel):
                 name='unique_shopping_cart',
             ),
         ]
+        default_related_name = 'carts'
         app_label = 'recipes'
 
 

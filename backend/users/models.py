@@ -4,10 +4,6 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    """
-    Модель пользователя
-    """
-
     email = models.EmailField(
         verbose_name='Электронная почта',
         max_length=254,
@@ -26,28 +22,23 @@ class User(AbstractUser):
 
 
 class Follow(models.Model):
-    """
-    Модель подписки.
-    """
-
     user = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
         verbose_name='Имя подписчика',
-        related_name='follower',
         help_text='Выберите подписчика',
     )
     following = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
         verbose_name='Имя автора',
-        related_name='following',
         help_text='Выберите автора',
     )
 
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+        default_related_name = 'followers'
         constraints = [
             models.UniqueConstraint(
                 fields=[

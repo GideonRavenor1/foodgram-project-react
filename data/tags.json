@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Ужин",
+    "color": "#540c87",
+    "slug": "uzhin"
+  },
+  {
+    "name": "Завтрак",
+    "color": "#07e843",
+    "slug": "zavtrak"
+  },
+  {
+    "name": "Обед",
+    "color": "#0c1687",
+    "slug": "obed"
+  },
+  {
+    "name": "Полдник",
+    "color": "#e8ce07",
+    "slug": "poldnic"
+  }
+]

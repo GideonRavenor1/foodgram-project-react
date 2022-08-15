@@ -1,14 +1,16 @@
 import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = (
-    'django-insecure-$(61h$8-7v&*!yxyo6jzrbq4$!!q2!5es7*qe3_l0rr*ykb3#^'
-)
-DEBUG = True
+SECRET_KEY = os.getenv('SECRET_KEY', default='ytrewq')
+DEBUG = os.getenv('DEBUG', default=True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 DJANGO_APPS = [
@@ -33,6 +35,8 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'corsheaders',
     'drf_yasg',
+    'colorfield',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -70,8 +74,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'postgres'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
+        'HOST': os.getenv('POSTGRES_HOST', 'postgresql_db'),
+        'PORT': '5432',
     }
 }
 
@@ -98,7 +106,16 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_DIR = os.path.join(BASE_DIR, 'static/')
+if not os.path.exists(STATIC_DIR):
+    os.mkdir(STATIC_DIR)
+
+STATIC_URL = "/backend_static/"
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+STATICFILES_DIRS = (STATIC_DIR,)
+
+MEDIA_URL = '/backend_media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -146,6 +163,7 @@ DJOSER = {
 
 
 LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+LOG_LEVEL = os.getenv('LOG_LEVEL', default='DEBUG')
 if not os.path.exists(LOGS_DIR):
     os.mkdir(LOGS_DIR)
 LOGGER_LINE_SEPARATOR = "-" * 80
@@ -162,7 +180,7 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'class': 'logging.FileHandler',
             'filename': os.path.join(LOGS_DIR, 'logger.log'),
             'formatter': 'file',
@@ -171,14 +189,17 @@ LOGGING = {
     },
     'loggers': {
         'django.request': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'handlers': ['file'],
             'propagate': True,
         },
         'django.db.backends': {
-            'level': 'DEBUG',
+            'level': LOG_LEVEL,
             'handlers': ['file'],
             'propagate': True,
         },
     },
 }
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/api/.*$'

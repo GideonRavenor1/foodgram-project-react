@@ -1,14 +1,15 @@
 from rest_framework import serializers
 
-from recipes.models.basic_models import Tag
+from recipes.models.basic import Tag
 
 
 class TagSerializer(serializers.ModelSerializer):
-    """
-    Сериализатор тегов
-    """
-
     class Meta:
         model = Tag
         fields = '__all__'
-        read_only_fields = '__all__'
+
+    def get_fields(self) -> dict:
+        fields = super().get_fields()
+        for field in fields.values():
+            field.read_only = True
+        return fields

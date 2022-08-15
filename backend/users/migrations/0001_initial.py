@@ -150,7 +150,6 @@ class Migration(migrations.Migration):
                     models.ForeignKey(
                         help_text='Выберите автора',
                         on_delete=django.db.models.deletion.CASCADE,
-                        related_name='followers+',
                         to=settings.AUTH_USER_MODEL,
                         verbose_name='Имя автора',
                     ),

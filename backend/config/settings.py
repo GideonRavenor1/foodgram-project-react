@@ -106,12 +106,12 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_DIR = os.path.join(BASE_DIR, 'static/')
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
 if not os.path.exists(STATIC_DIR):
     os.mkdir(STATIC_DIR)
 
 STATIC_URL = "/backend_static/"
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (STATIC_DIR,)
 
 MEDIA_URL = '/backend_media/'

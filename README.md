@@ -76,18 +76,18 @@ exit
 
 ## Развернутый экземпляр приложения доступен по адресу:
 ## API
-1. http://yatube-yandex.ddns.net/api/swagger/
-2. http://yatube-yandex.ddns.net/api/redoc/
+1. http://51.250.110.97/api/swagger/
+2. http://51.250.110.97/api/redoc/
 
 
 ## UI панель базы данный PostgeSQL
-1. http://yatube-yandex.ddns.net/pgadmin4/
+1. http://51.250.110.97/pgadmin4/
 
 ## Фронт
-1. http://yatube-yandex.ddns.net
+1. http://51.250.110.97/
 
 
 Тестовые данные для входа в админ-панель:
 * admin
 * ytrewq1993
-* [Ссылка](http://yatube-yandex.ddns.net/api/admin-page/)
+* [Ссылка](http://51.250.110.97/api/admin-page/)

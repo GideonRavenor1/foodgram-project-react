@@ -1,5 +1,5 @@
-import os
 import json
+import os
 
 from django.apps.registry import Apps
 from django.conf import settings

@@ -55,8 +55,12 @@ class RecipeAdmin(admin.ModelAdmin):
         return ', '.join(obj.ingredients.values_list('name', flat=True))
 
     def get_queryset(self, request: HttpRequest) -> QuerySet:
-        qs = super().get_queryset(request)
-        return qs.select_related('author').prefetch_related('ingredients')
+        return (
+            super()
+            .get_queryset(request)
+            .select_related('author')
+            .prefetch_related('ingredients')
+        )
 
 
 @admin.register(IngredientAmount)

@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
+from djoser.serializers import UserSerializer as DjoserUserSerializer
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
-from djoser.serializers import UserSerializer as DjoserUserSerializer
 
 from users.models import Follow
 

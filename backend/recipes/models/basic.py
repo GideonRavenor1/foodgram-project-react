@@ -1,9 +1,10 @@
-from django.db import models
-from django.core.validators import MinValueValidator
-
 from colorfield.fields import ColorField
+from django.core.validators import MinValueValidator
+from django.db import models
 
 from .abstract import AbstractNamedModel
+
+DEFAULT_COLOR_CODE = '#FF0000'
 
 
 class Ingredient(AbstractNamedModel):
@@ -34,7 +35,7 @@ class Ingredient(AbstractNamedModel):
 class Tag(AbstractNamedModel):
     color = ColorField(
         verbose_name='Цвет',
-        default='#FF0000',
+        default=DEFAULT_COLOR_CODE,
         help_text='Цветовой HEX-код',
     )
     slug = models.SlugField(

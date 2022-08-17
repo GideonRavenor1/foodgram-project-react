@@ -4,7 +4,6 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from ..serializers.users import CustomUserSerializer
 
-
 User = get_user_model()
 
 

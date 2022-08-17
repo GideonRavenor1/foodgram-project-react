@@ -1,16 +1,16 @@
 from django.db import transaction
+from drf_extra_fields.fields import Base64ImageField
 from drf_yasg.utils import swagger_serializer_method
 from rest_framework import serializers
-from drf_extra_fields.fields import Base64ImageField
 
 from recipes.models.basic import Recipe, Tag
 from recipes.models.m2m import Favorite, ShoppingCart, IngredientAmount
-from ..serializers.users import CustomUserSerializer
 from .ingredients import (
     IngredientAmountSerializer,
     CreateIngredientAmountSerializer,
 )
 from .tags import TagSerializer
+from ..serializers.users import CustomUserSerializer
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):
@@ -22,6 +22,7 @@ class ShortRecipeSerializer(serializers.ModelSerializer):
 class RecipeListSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     author = CustomUserSerializer()
+    image = Base64ImageField()
     ingredients = serializers.SerializerMethodField()
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
@@ -59,7 +60,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    image = Base64ImageField(use_url=True, max_length=None)
+    image = Base64ImageField()
     ingredients = CreateIngredientAmountSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
@@ -106,15 +107,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         tags_data = validated_data.pop('tags')
         IngredientAmount.objects.filter(recipe=instance).delete()
         self.bulk_create(instance, ingredients_data)
-        instance.name = validated_data.pop('name')
-        instance.text = validated_data.pop('text')
-        instance.cooking_time = validated_data.pop('cooking_time')
-        if validated_data.get('image') is not None:
-            instance.image = validated_data.pop('image')
-
-        instance.save()
         instance.tags.set(tags_data)
-        return instance
+        return super().update(instance, validated_data)
 
     def validate_cooking_time(self, value):
         if int(value) <= 0:

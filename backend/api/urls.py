@@ -1,14 +1,12 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views.tags import TagsViewSet
-from .views.recipe import RecipeViewSet
-from .views.Ingredients import IngredientsViewSet
-from .views.users import CustomUserViewSet
-from .views.follows import FollowAPIView, FollowListAPIView
-
 from .swagger.urls import urlpatterns as swagger_urls
-
+from .views.Ingredients import IngredientsViewSet
+from .views.follows import FollowAPIView, FollowListAPIView
+from .views.recipe import RecipeViewSet
+from .views.tags import TagsViewSet
+from .views.users import CustomUserViewSet
 
 app_name = 'api'
 

@@ -1,14 +1,14 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema, no_body
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from drf_yasg.utils import swagger_auto_schema, no_body
-from django.utils.decorators import method_decorator
 
 from recipes.models.basic import Recipe
 from recipes.models.m2m import Favorite, ShoppingCart
@@ -21,7 +21,8 @@ from ..serializers.recipes import (
     ShortRecipeSerializer,
 )
 from ..serializers.shoping_cart import ShoppingCartSerializer
-from ..logic import prepare_pdf_file
+from ..services import get_list_ingredients
+from ..logic import get_pdf
 
 
 @method_decorator(
@@ -84,8 +85,8 @@ from ..logic import prepare_pdf_file
 )
 class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = [IsAuthorOrReadOnly]
-    filter_backends = [DjangoFilterBackend]
+    permission_classes = (IsAuthorOrReadOnly,)
+    filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
     swagger_tags = ('Recipes',)
 
@@ -95,7 +96,7 @@ class RecipeViewSet(ModelViewSet):
         return RecipeSerializer
 
     @action(
-        detail=True, methods=["POST"], permission_classes=[IsAuthenticated]
+        detail=True, methods=['POST'], permission_classes=[IsAuthenticated]
     )
     def favorite(self, request, pk):
         return self.post_method_for_actions(
@@ -109,7 +110,7 @@ class RecipeViewSet(ModelViewSet):
         )
 
     @action(
-        detail=True, methods=["POST"], permission_classes=[IsAuthenticated]
+        detail=True, methods=['POST'], permission_classes=[IsAuthenticated]
     )
     def shopping_cart(self, request, pk):
         return self.post_method_for_actions(
@@ -123,14 +124,16 @@ class RecipeViewSet(ModelViewSet):
         )
 
     @action(
-        detail=False, methods=['get'], permission_classes=[IsAuthenticated]
+        detail=False, methods=['GET'], permission_classes=[IsAuthenticated]
     )
     def download_shopping_cart(self, request) -> HttpResponse:
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = (
-            'attachment; ' 'filename="shopping_list.pdf"'
+        ingredients = get_list_ingredients(user=request.user)
+        content = get_pdf(context={'ingredients': ingredients})
+        response = HttpResponse(
+            content=content, content_type='application/pdf;'
         )
-        prepare_pdf_file(request=request, response=response)
+        response['Content-Disposition'] = 'inline; filename=shopping_list.pdf'
+        response['Content-Transfer-Encoding'] = 'binary'
         return response
 
     @staticmethod

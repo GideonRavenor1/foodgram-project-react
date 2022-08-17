@@ -53,13 +53,16 @@ docker exec -it drf_backend bash
 ```
 python manage.py migrate
 ```
+Собрать статику:
+```
+python manage.py collectstatic
+```
 После ввести команду:
 ```
 python manage.py createsuperuser
 ```
 и следовать дальнейшим инструкциям.
-```
-```
+
 Для выхода введите:
 ```
 exit
@@ -85,9 +88,3 @@ exit
 
 ## Фронт
 1. http://51.250.110.97/
-
-
-Тестовые данные для входа в админ-панель:
-* admin@admin.ru
-* ytrewq1993
-* [Ссылка](http://51.250.110.97/api/admin-page/)

@@ -1,10 +1,9 @@
 from django.contrib.auth import get_user_model
-from rest_framework import serializers
 from drf_yasg.utils import swagger_serializer_method
+from rest_framework import serializers
 
 from users.models import Follow
 from .recipes import ShortRecipeSerializer
-
 
 User = get_user_model()
 
@@ -17,8 +16,8 @@ class FollowSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'email',
             'id',
+            'email',
             'username',
             'first_name',
             'last_name',

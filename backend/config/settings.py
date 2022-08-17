@@ -7,8 +7,8 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', default='ytrewq')
-DEBUG = os.getenv('DEBUG', default=True)
+SECRET_KEY = os.getenv('SECRET_KEY')
+DEBUG = int(os.getenv('DEBUG', default=1))
 
 ALLOWED_HOSTS = ['*']
 
@@ -110,7 +110,7 @@ STATIC_DIR = os.path.join(BASE_DIR, 'static')
 if not os.path.exists(STATIC_DIR):
     os.mkdir(STATIC_DIR)
 
-STATIC_URL = "/backend_static/"
+STATIC_URL = '/backend_static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (STATIC_DIR,)
 

@@ -203,3 +203,19 @@ LOGGING = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_URLS_REGEX = r'^/api/.*$'
+
+SPOONACULAR_API_URL = 'https://api.spoonacular.com'
+SPOONACULAR_API_KEY = os.getenv('SPOONACULAR_API_KEY', default=None)
+SPOONACULAR_HEADERS = {'Content-Type': 'application/json'}
+
+CELERY_BROKER_URL = os.getenv(
+    'CELERY_BROKER_URL', default='redis://redis:6379'
+)
+CELERY_RESULT_BACKEND = os.getenv(
+    'CELERY_RESULT_BACKEND', default='redis://redis:6379'
+)
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = CELERY_TASK_SERIALIZER
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_RETRY_COUNT = 4

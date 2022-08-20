@@ -8,7 +8,6 @@ Foodgram это ресурс для публикации рецептов.
 
 >Технологии, используемые на проекте:
 
->Backend:
 >>1. Python ![Python](https://img.shields.io/badge/-Python-black?style=flat-square&logo=Python)
 >>2. Django ![Django](https://img.shields.io/badge/-Django-0aad48?style=flat-square&logo=Django)
 >>3. DjangoRestFramework ![Django Rest Framework](https://img.shields.io/badge/DRF-red?style=flat-square&logo=Django)
@@ -16,7 +15,10 @@ Foodgram это ресурс для публикации рецептов.
 >>5. pgAdmin ![pgAdmin](https://img.shields.io/badge/PG-pgAdmin-blue?style=flat-square&logo=pgAdmin)
 >>6. Nginx ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=flat-square&logo=nginx&logoColor=white)
 >>7. Swagger ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=flat-square&logo=swagger&logoColor=white)
-
+>>8. Celery ![Celery](https://img.shields.io/badge/-Celery-%2300C7B7?style=flat-square&logo=Celery)
+>>9. Flower ![Flower](https://img.shields.io/badge/F-Flower-green?style=flat-square&logo=Celery)
+>>10. Redis ![Redis](https://img.shields.io/badge/-Redis-FCA121?style=flat-square&logo=Redis)
+>>11. React ![React](https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB)
 # Как запустить проект:
 
 В папку ***infra*** расположить .env файл со следующими параметрами:
@@ -84,7 +86,11 @@ exit
 
 
 ## UI панель базы данный PostgeSQL
-1. http://51.250.110.97/pgadmin4/
+1. http://51.250.110.97/api/pgadmin4/
+
+
+## UI панель celery
+1. http://51.250.110.97/api/flower/
 
 ## Фронт
 1. http://51.250.110.97/

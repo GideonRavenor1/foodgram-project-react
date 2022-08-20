@@ -2,21 +2,41 @@
   {
     "name": "Ужин",
     "color": "#540c87",
-    "slug": "uzhin"
+    "slug": "dinner"
   },
   {
     "name": "Завтрак",
     "color": "#07e843",
-    "slug": "zavtrak"
+    "slug": "breakfast"
   },
   {
     "name": "Обед",
     "color": "#0c1687",
-    "slug": "obed"
+    "slug": "lunch"
   },
   {
     "name": "Полдник",
     "color": "#e8ce07",
-    "slug": "poldnic"
+    "slug": "afternoon-tea"
+  },
+    {
+    "name": "Вегетарианская",
+    "color": "#8BE86F",
+    "slug": "vegetarian"
+  },
+  {
+    "name": "Десерт",
+    "color": "#9B16E8",
+    "slug": "dessert"
+  },
+  {
+    "name": "Мясо",
+    "color": "#E81010",
+    "slug": "meat"
+  },
+  {
+    "name": "Рыба",
+    "color": "#6DE8E5",
+    "slug": "fish"
   }
 ]

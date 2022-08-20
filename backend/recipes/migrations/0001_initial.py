@@ -191,7 +191,7 @@ class Migration(migrations.Migration):
                 (
                     'slug',
                     models.SlugField(
-                        help_text='Неофициальное имя, часть URL адреса',
+                        help_text='Укажите имя тега в переводе на английский язык',
                         verbose_name='Слаг',
                     ),
                 ),

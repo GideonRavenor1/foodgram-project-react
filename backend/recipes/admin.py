@@ -12,7 +12,6 @@ EMPTY_VALUE = '-пусто-'
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'slug')
-    prepopulated_fields = {'slug': ('name',)}
     empty_value_display = '-пусто-'
 
 

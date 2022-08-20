@@ -40,7 +40,7 @@ class Tag(AbstractNamedModel):
     )
     slug = models.SlugField(
         verbose_name='Слаг',
-        help_text='Неофициальное имя, часть URL адреса',
+        help_text='Укажите имя тега в переводе на английский язык.',
     )
 
     class Meta:

@@ -80,7 +80,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         )
         read_only_fields = ('tags',)
 
-    def bulk_create(self, recipe, ingredients_data):
+    def bulk_create(self, recipe, ingredients_data) -> None:
         elements = [
             IngredientAmount(
                 ingredient=ingredient['id'],
@@ -92,7 +92,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         IngredientAmount.objects.bulk_create(elements)
 
     @transaction.atomic
-    def create(self, validated_data):
+    def create(self, validated_data) -> Recipe:
         request = self.context['request']
         ingredients_data = validated_data.pop('ingredients')
         tags_data = validated_data.pop('tags')
@@ -102,7 +102,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     @transaction.atomic
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data) -> Recipe:
         ingredients_data = validated_data.pop('ingredients')
         tags_data = validated_data.pop('tags')
         IngredientAmount.objects.filter(recipe=instance).delete()
@@ -110,13 +110,13 @@ class RecipeSerializer(serializers.ModelSerializer):
         instance.tags.set(tags_data)
         return super().update(instance, validated_data)
 
-    def validate_cooking_time(self, value):
-        if int(value) <= 0:
+    def validate_cooking_time(self, value) -> int:
+        if value <= 0:
             raise serializers.ValidationError(
                 'Время приготовления должно быть больше 0.'
             )
         return value
 
-    def to_representation(self, instance):
+    def to_representation(self, instance) -> dict:
         context = {'request': self.context['request']}
         return RecipeListSerializer(instance, context=context).data

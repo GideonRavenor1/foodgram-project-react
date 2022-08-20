@@ -3,19 +3,18 @@ import random
 from urllib.parse import urljoin
 
 import requests
-from django.contrib.auth import get_user_model
+from deep_translator import GoogleTranslator
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
 from django.db import IntegrityError
 from django.db.models import QuerySet
 from django.utils.html import strip_tags
-from django.core.files.base import ContentFile
 from rest_framework.generics import get_object_or_404
-from deep_translator import GoogleTranslator
 
 from .models.basic import Recipe, Tag, Ingredient
 from .models.m2m import IngredientAmount
 from .type_annotations import RecipeResult, IngredientResult
-
 
 User = get_user_model()
 

@@ -82,6 +82,7 @@ jobs:
           echo SPOONACULAR_API_KEY=${{ secrets.SPOONACULAR_API_KEY }} >> .env
           echo CELERY_BROKER_URL=${{ secrets.CELERY_BROKER_URL }} >> .env
           echo CELERY_RESULT_BACKEND=${{ secrets.CELERY_RESULT_BACKEND }} >> .env
+          echo CELERY_BEAT_PER_HOUR=${{ secrets.CELERY_BEAT_PER_HOUR }} >> .env
           sudo docker-compose pull
           sudo docker-compose stop
           sudo docker-compose rm backend

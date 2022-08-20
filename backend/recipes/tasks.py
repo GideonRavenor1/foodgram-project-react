@@ -1,7 +1,8 @@
-import requests
 import random
-from django.contrib.auth import get_user_model
+
+import requests
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 from config.celery_config import app
 from .models.basic import Tag
@@ -11,7 +12,7 @@ User = get_user_model()
 
 
 @app.task(
-    name='Getting a random number of recipes every three hours',
+    name='recipes.tasks.get_recipes',
     bind=True,
     retry_backoff=600,
     retry_jitter=True,

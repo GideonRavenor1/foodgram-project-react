@@ -246,7 +246,7 @@ class RecipeSaver:
             element
             for element in data
             if not self._if_exist_ingredient(
-                element=(element['name'], element['measurement_unit']),
+                element=(element['name'].lower(), element['measurement_unit'].lower()),
                 ingredients=self._transformation_ingredients(ingredients),
             )
         ]
@@ -268,7 +268,7 @@ class RecipeSaver:
     @staticmethod
     def _transformation_ingredients(ingredients: QuerySet) -> set[tuple]:
         return {
-            (ingredient.name, ingredient.measurement_unit)
+            (ingredient.name.lower(), ingredient.measurement_unit.lower())
             for ingredient in ingredients
         }
 

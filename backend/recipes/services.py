@@ -70,15 +70,26 @@ class JsonParser:
 
     def parse(self) -> None:
         for recipe in self._data:
-            for field in self._recipe_fields:
-                getattr(self, f'_set_{field}')(
-                    element=recipe, data=self._recipe
-                )
-            self._add_recipe_to_result()
+            try:
+                for field in self._recipe_fields:
+                    getattr(self, f'_set_{field}')(
+                        element=recipe, data=self._recipe
+                    )
+            except KeyError:
+                self._clear_ingredient()
+                self._clear_recipe()
+            else:
+                self._add_recipe_to_result()
 
     @property
     def result(self) -> list:
         return self._result
+
+    def _clear_recipe(self) -> None:
+        self._recipe.clear()
+
+    def _clear_ingredient(self) -> None:
+        self._ingredient.clear()
 
     def _set_name(
         self, element: dict, data: RecipeResult | IngredientResult
@@ -136,12 +147,12 @@ class JsonParser:
 
     def _add_ingredient_to_recipe(self) -> IngredientResult:
         ingredients = self._ingredient.copy()
-        self._ingredient.clear()
+        self._clear_ingredient()
         return ingredients
 
     def _add_recipe_to_result(self) -> None:
         recipe = self._recipe.copy()
-        self._recipe.clear()
+        self._clear_recipe()
         self._result.append(recipe)
 
     @staticmethod

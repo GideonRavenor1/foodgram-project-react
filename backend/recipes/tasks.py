@@ -29,11 +29,7 @@ def get_recipes(self):
 
     data = crawler.result
     parser = JsonParser(data=data, tag=tag)
-
-    try:
-        parser.parse()
-    except KeyError as error:
-        raise self.retry(exc=error)
+    parser.parse()
 
     result = parser.result
     saver = RecipeSaver(data=result)

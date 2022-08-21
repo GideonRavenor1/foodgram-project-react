@@ -4,8 +4,12 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     build-essential \
     gcc
-COPY requirements.txt requirements.txt
+
+RUN pip install poetry
+COPY ./poetry.lock ./pyproject.toml ./
+RUN poetry export --without-hashes --format=requirements.txt > requirements.txt
 RUN pip install -r requirements.txt
+
 
 FROM python:3.10-slim
 ENV PYTHONUNBUFFERED 1

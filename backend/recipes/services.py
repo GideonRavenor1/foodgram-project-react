@@ -246,7 +246,10 @@ class RecipeSaver:
             element
             for element in data
             if not self._if_exist_ingredient(
-                element=(element['name'].lower(), element['measurement_unit'].lower()),
+                element=(
+                    element['name'].lower(),
+                    element['measurement_unit'].lower(),
+                ),
                 ingredients=self._transformation_ingredients(ingredients),
             )
         ]

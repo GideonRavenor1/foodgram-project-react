@@ -19,6 +19,8 @@ jobs:
     - name: Install dependencies
       run: | 
         pip install poetry
+        cp backend/poetry.lock poetry.lock
+        cp backend/pyproject.toml pyproject.toml
         poetry install
 
     - name: Test with flake8

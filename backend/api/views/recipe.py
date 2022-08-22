@@ -1,6 +1,6 @@
 from typing import Type
 
-from django.db.models import Model, QuerySet
+from django.db.models import Model
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -99,20 +99,6 @@ class RecipeViewSet(ModelViewSet):
         if self.action in ('list', 'retrieve'):
             return RecipeListSerializer
         return RecipeSerializer
-
-    # def list(self, request, *args, **kwargs) -> Response:
-    #     if not request.GET.getlist('tags'):
-    #         queryset = self.get_queryset().none()
-    #     else:
-    #         queryset = self.filter_queryset(self.get_queryset())
-    #
-    #     page = self.paginate_queryset(queryset)
-    #     if page is not None:
-    #         serializer = self.get_serializer(page, many=True)
-    #         return self.get_paginated_response(serializer.data)
-    #
-    #     serializer = self.get_serializer(queryset, many=True)
-    #     return Response(serializer.data)
 
     @action(
         detail=True, methods=['POST'], permission_classes=[IsAuthenticated]

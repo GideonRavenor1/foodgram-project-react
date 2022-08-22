@@ -9,7 +9,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - '80:80'
+      - '8080:80'
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - static_volume:/app/staticfiles
@@ -74,7 +74,7 @@ services:
     image: ${DOCKER_USERNAME}/yandex-foodgram-backend:${IMAGE_TAG}
     container_name: flower
     restart: always
-    command: python -m celery -A config.celery_config.app flower --url_prefix=api/flower --broker=${CELERY_BROKER_URL}
+    command: python -m celery -A config.celery_config.app --broker=${CELERY_BROKER_URL} flower --url_prefix=api/flower
     expose:
       - '5555'
     environment:

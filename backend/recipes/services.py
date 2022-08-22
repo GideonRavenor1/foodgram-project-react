@@ -7,7 +7,7 @@ from deep_translator import GoogleTranslator
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.db.models import QuerySet
 from django.utils.html import strip_tags
 from rest_framework.generics import get_object_or_404
@@ -94,9 +94,8 @@ class JsonParser:
     def _set_name(
         self, element: dict, data: RecipeResult | IngredientResult
     ) -> None:
-        data['name'] = self._translate_string(
-            string=element.get('title') or element.get('name')
-        )
+        text = element.get('title') or element.get('name').lower()
+        data['name'] = self._translate_string(string=text)
 
     def _set_text(
         self, element: dict, data: RecipeResult | IngredientResult
@@ -171,6 +170,7 @@ class RecipeSaver:
         self._ingredient_units = None
         self._count = 0
 
+    @transaction.atomic
     def save(self) -> int:
         user = self._get_superuser()
         for recipe in self._data:
@@ -178,10 +178,11 @@ class RecipeSaver:
 
             try:
                 recipe = self._save_recipe(user=user, data=recipe)
+                self._bulk_create(recipe=recipe, data=ingredients_data)
             except IntegrityError:
+                transaction.rollback()
                 continue
 
-            self._bulk_create(recipe=recipe, data=ingredients_data)
             self._count += 1
 
         return self._count
@@ -213,9 +214,9 @@ class RecipeSaver:
         return data, filename
 
     def _bulk_create(self, recipe: Recipe, data: list[dict]) -> None:
-        self._ingredient_names = {fields['name'] for fields in data}
+        self._ingredient_names = {fields['name'].lower() for fields in data}
         self._ingredient_units = {
-            fields['measurement_unit'] for fields in data
+            fields['measurement_unit'].lower() for fields in data
         }
         self._bulk_create_ingredients(data=data)
         self._bulk_create_ingredient_amount(recipe=recipe, data=data)
@@ -227,8 +228,8 @@ class RecipeSaver:
         )
         ingredients = [
             Ingredient(
-                name=element['name'],
-                measurement_unit=element['measurement_unit'],
+                name=element['name'].lower(),
+                measurement_unit=element['measurement_unit'].lower(),
             )
             for element in valid_date
         ]
@@ -264,7 +265,12 @@ class RecipeSaver:
                 ingredients=self._transformation_ingredients(ingredients),
             )
         ]
-        return valid_date
+        return [
+            dict(field)
+            for field in set(
+                frozenset(element.items()) for element in valid_date
+            )
+        ]
 
     def _get_ingredient_in_db(self) -> QuerySet:
         return Ingredient.objects.filter(
@@ -293,6 +299,7 @@ class RecipeSaver:
         return [
             ingredient
             for ingredient in ingredients_in_db
-            if ingredient.name == element['name']
-            and ingredient.measurement_unit == element['measurement_unit']
+            if ingredient.name.lower() == element['name'].lower()
+            and ingredient.measurement_unit.lower()
+            == element['measurement_unit'].lower()
         ][0]

@@ -1,3 +1,6 @@
+from typing import Type
+
+from django.db.models import Model, QuerySet
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -7,7 +10,9 @@ from drf_yasg.utils import swagger_auto_schema, no_body
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer
 from rest_framework.viewsets import ModelViewSet
 
 from recipes.models.basic import Recipe
@@ -90,21 +95,35 @@ class RecipeViewSet(ModelViewSet):
     filterset_class = RecipeFilter
     swagger_tags = ('Recipes',)
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> Type[RecipeListSerializer | RecipeSerializer]:
         if self.action in ('list', 'retrieve'):
             return RecipeListSerializer
         return RecipeSerializer
 
+    # def list(self, request, *args, **kwargs) -> Response:
+    #     if not request.GET.getlist('tags'):
+    #         queryset = self.get_queryset().none()
+    #     else:
+    #         queryset = self.filter_queryset(self.get_queryset())
+    #
+    #     page = self.paginate_queryset(queryset)
+    #     if page is not None:
+    #         serializer = self.get_serializer(page, many=True)
+    #         return self.get_paginated_response(serializer.data)
+    #
+    #     serializer = self.get_serializer(queryset, many=True)
+    #     return Response(serializer.data)
+
     @action(
         detail=True, methods=['POST'], permission_classes=[IsAuthenticated]
     )
-    def favorite(self, request, pk):
+    def favorite(self, request: Request, pk: int) -> Response:
         return self.post_method_for_actions(
             request=request, pk=pk, serializers=FavoriteSerializer
         )
 
     @favorite.mapping.delete
-    def delete_favorite(self, request, pk):
+    def delete_favorite(self, request: Request, pk: int) -> Response:
         return self.delete_method_for_actions(
             request=request, pk=pk, model=Favorite
         )
@@ -112,13 +131,13 @@ class RecipeViewSet(ModelViewSet):
     @action(
         detail=True, methods=['POST'], permission_classes=[IsAuthenticated]
     )
-    def shopping_cart(self, request, pk):
+    def shopping_cart(self, request: Request, pk: int) -> Response:
         return self.post_method_for_actions(
             request=request, pk=pk, serializers=ShoppingCartSerializer
         )
 
     @shopping_cart.mapping.delete
-    def delete_shopping_cart(self, request, pk):
+    def delete_shopping_cart(self, request: Request, pk: int) -> Response:
         return self.delete_method_for_actions(
             request=request, pk=pk, model=ShoppingCart
         )
@@ -126,7 +145,7 @@ class RecipeViewSet(ModelViewSet):
     @action(
         detail=False, methods=['GET'], permission_classes=[IsAuthenticated]
     )
-    def download_shopping_cart(self, request) -> HttpResponse:
+    def download_shopping_cart(self, request: Request) -> HttpResponse:
         ingredients = get_list_ingredients(user=request.user)
         content = get_pdf(context={'ingredients': ingredients})
         response = HttpResponse(
@@ -137,7 +156,7 @@ class RecipeViewSet(ModelViewSet):
         return response
 
     @staticmethod
-    def post_method_for_actions(request, pk, serializers):
+    def post_method_for_actions(request: Request, pk: int, serializers: Type[ModelSerializer]) -> Response:
         data = {'user': request.user.id, 'recipe': pk}
         serializer = serializers(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
@@ -145,7 +164,7 @@ class RecipeViewSet(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @staticmethod
-    def delete_method_for_actions(request, pk, model):
+    def delete_method_for_actions(request: Request, pk: int, model: Type[Model]) -> Response:
         user = request.user
         recipe = get_object_or_404(Recipe, id=pk)
         model_obj = get_object_or_404(model, user=user, recipe=recipe)

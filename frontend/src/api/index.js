@@ -1,7 +1,9 @@
 class Api {
   constructor (url, headers) {
+    this.first_request = false
     this._url = url
     this._headers = headers
+
   }
 
   checkResponse (res) {
@@ -114,6 +116,10 @@ class Api {
       const token = localStorage.getItem('token')
       const authorization = token ? { 'authorization': `Token ${token}` } : {}
       const tagsString = tags ? tags.filter(tag => tag.value).map(tag => `&tags=${tag.slug}`).join('') : ''
+      console.log(tagsString)
+      if (!tagsString && !this.first_request) {
+          console.log('GEC')
+      }
       return fetch(
         `/api/recipes/?page=${page}&limit=${limit}${author ? `&author=${author}` : ''}${is_favorited ? `&is_favorited=${is_favorited}` : ''}${is_in_shopping_cart ? `&is_in_shopping_cart=${is_in_shopping_cart}` : ''}${tagsString}`,
         {

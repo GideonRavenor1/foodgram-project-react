@@ -10,7 +10,9 @@
 }
 
 .checkboxGroupItems {
-  flex-basis: 370px;
   display: flex;
+  flex-wrap: wrap;
+  height: 60px;
+  align-content: space-between;
 }
 

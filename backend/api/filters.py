@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from django_filters.rest_framework import FilterSet, filters
 from rest_framework.filters import SearchFilter
 
@@ -19,12 +20,12 @@ class RecipeFilter(FilterSet):
         model = Recipe
         fields = ('tags', 'author', 'is_favorited', 'is_in_shopping_cart')
 
-    def filter_is_favorited(self, queryset, name, value):
+    def filter_is_favorited(self, queryset, name, value) -> QuerySet:
         if value:
             return queryset.filter(favorites__user=self.request.user)
         return queryset
 
-    def filter_is_in_shopping_cart(self, queryset, name, value):
+    def filter_is_in_shopping_cart(self, queryset, name, value) -> QuerySet:
         if value:
             return queryset.filter(carts__user=self.request.user)
         return queryset

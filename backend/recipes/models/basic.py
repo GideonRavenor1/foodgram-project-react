@@ -31,6 +31,11 @@ class Ingredient(AbstractNamedModel):
     def __str__(self):
         return f'{self.name} - {self.measurement_unit}'
 
+    def save(self, *args, **kwargs) -> None:
+        self.name = self.name.lower()
+        self.measurement_unit = self.measurement_unit.lower()
+        super().save(*args, **kwargs)
+
 
 class Tag(AbstractNamedModel):
     color = ColorField(

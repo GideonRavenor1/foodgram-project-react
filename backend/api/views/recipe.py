@@ -95,7 +95,9 @@ class RecipeViewSet(ModelViewSet):
     filterset_class = RecipeFilter
     swagger_tags = ('Recipes',)
 
-    def get_serializer_class(self) -> Type[RecipeListSerializer | RecipeSerializer]:
+    def get_serializer_class(
+        self,
+    ) -> Type[RecipeListSerializer | RecipeSerializer]:
         if self.action in ('list', 'retrieve'):
             return RecipeListSerializer
         return RecipeSerializer
@@ -142,7 +144,9 @@ class RecipeViewSet(ModelViewSet):
         return response
 
     @staticmethod
-    def post_method_for_actions(request: Request, pk: int, serializers: Type[ModelSerializer]) -> Response:
+    def post_method_for_actions(
+        request: Request, pk: int, serializers: Type[ModelSerializer]
+    ) -> Response:
         data = {'user': request.user.id, 'recipe': pk}
         serializer = serializers(data=data, context={'request': request})
         serializer.is_valid(raise_exception=True)
@@ -150,7 +154,9 @@ class RecipeViewSet(ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @staticmethod
-    def delete_method_for_actions(request: Request, pk: int, model: Type[Model]) -> Response:
+    def delete_method_for_actions(
+        request: Request, pk: int, model: Type[Model]
+    ) -> Response:
         user = request.user
         recipe = get_object_or_404(Recipe, id=pk)
         model_obj = get_object_or_404(model, user=user, recipe=recipe)

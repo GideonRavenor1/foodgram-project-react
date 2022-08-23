@@ -128,7 +128,7 @@ class Api {
       const authorization = token ? { 'authorization': `Token ${token}` } : {}
       const tagsString = tags ? tags.filter(tag => tag.value).map(tag => `&tags=${tag.slug}`).join('') : ''
 
-      if (!tagsString) {
+      if (!tagsString && !is_in_shopping_cart) {
           return this.checkResponse(this.getDammyResponse())
       }
 

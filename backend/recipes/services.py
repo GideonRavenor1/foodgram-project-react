@@ -170,17 +170,16 @@ class RecipeSaver:
         self._ingredient_units = None
         self._count = 0
 
-    @transaction.atomic
     def save(self) -> int:
         user = self._get_superuser()
         for recipe in self._data:
             ingredients_data = recipe.pop('ingredients')
 
             try:
-                recipe = self._save_recipe(user=user, data=recipe)
-                self._bulk_create(recipe=recipe, data=ingredients_data)
+                with transaction.atomic():
+                    recipe = self._save_recipe(user=user, data=recipe)
+                    self._bulk_create(recipe=recipe, data=ingredients_data)
             except IntegrityError:
-                transaction.rollback()
                 continue
 
             self._count += 1

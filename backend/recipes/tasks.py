@@ -3,10 +3,9 @@ import random
 import requests
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from celery import states
-from celery.exceptions import Ignore
 
 from config.celery_config import app
+from .exceptions import TaskFail
 from .models.basic import Tag
 from .services import RecipesCrawler, JsonParser, RecipeSaver
 
@@ -24,12 +23,7 @@ def get_recipes(self):
     try:
         user = User.objects.get(is_superuser=True)
     except User.DoesNotExist:
-        self.update_state(
-            task_id=self.request.id,
-            state=states.FAILURE,
-            meta='Суперпользователь не найден'
-        )
-        raise Ignore()
+        raise TaskFail('Суперпользователь не найден')
 
     tag = random.choice(Tag.objects.all().values_list('slug', flat=True))
     crawler = RecipesCrawler(tag=tag)

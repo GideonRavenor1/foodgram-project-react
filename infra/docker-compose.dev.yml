@@ -14,7 +14,6 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - static_volume:/app/staticfiles
       - media_volume:/app/media
-      - ../docs:/usr/share/nginx/html/api/docs/
     depends_on:
       - backend
 
@@ -27,9 +26,8 @@ services:
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
-      - ../data:/data
       - ../backend:/app
-    command: bash -c "cd /app && python manage.py migrate --noinput && python manage.py collectstatic --noinput
+    command: bash -c "python manage.py migrate --noinput && python manage.py collectstatic --noinput
       && gunicorn --bind 0.0.0.0:8000 --workers 3 config.wsgi:application"
     depends_on:
       - postgresql_db
@@ -46,7 +44,6 @@ services:
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
-      - ../data:/data
       - ../backend:/app
     depends_on:
       - backend
@@ -62,7 +59,6 @@ services:
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
-      - ../data:/data
       - ../backend:/app
     depends_on:
       - backend

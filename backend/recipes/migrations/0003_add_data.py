@@ -5,7 +5,7 @@ from django.apps.registry import Apps
 from django.conf import settings
 from django.db import migrations
 
-DATA_DIR = os.path.join(settings.BASE_DIR.parent, 'data')
+DATA_DIR = os.path.join(settings.BASE_DIR, 'data')
 
 
 def get_data(path: str) -> list[dict]:

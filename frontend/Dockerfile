@@ -8,4 +8,5 @@ RUN npm run build
 
 FROM nginx:1.23.1-alpine
 COPY --from=build-stage /app/build /usr/share/nginx/html
+COPY --from=build-stage /app/docs /usr/share/nginx/html/api/docs/
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

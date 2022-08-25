@@ -10,7 +10,6 @@ from django.core.files.base import ContentFile
 from django.db import IntegrityError, transaction
 from django.db.models import QuerySet
 from django.utils.html import strip_tags
-from rest_framework.generics import get_object_or_404
 
 from .models.basic import Recipe, Tag, Ingredient
 from .models.m2m import IngredientAmount
@@ -164,20 +163,20 @@ class JsonParser:
 
 
 class RecipeSaver:
-    def __init__(self, data: list[dict]) -> None:
+    def __init__(self, data: list[dict], user: User) -> None:
         self._data = data
         self._ingredient_names = None
         self._ingredient_units = None
         self._count = 0
+        self._user = user
 
     def save(self) -> int:
-        user = self._get_superuser()
         for recipe in self._data:
             ingredients_data = recipe.pop('ingredients')
 
             try:
                 with transaction.atomic():
-                    recipe = self._save_recipe(user=user, data=recipe)
+                    recipe = self._save_recipe(user=self._user, data=recipe)
                     self._bulk_create(recipe=recipe, data=ingredients_data)
             except IntegrityError:
                 continue
@@ -195,10 +194,6 @@ class RecipeSaver:
         recipe.save()
         recipe.tags.set(self._get_tag(tag_data))
         return recipe
-
-    @staticmethod
-    def _get_superuser() -> QuerySet:
-        return get_object_or_404(User, is_superuser=True)
 
     @staticmethod
     def _get_tag(tag) -> QuerySet:

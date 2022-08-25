@@ -68,7 +68,7 @@ jobs:
         username: ${{ secrets.USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd infra
+          cd foodgram
           touch .env
           echo DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }} >> .env
           echo IMAGE_TAG=${{ secrets.IMAGE_TAG }} >> .env

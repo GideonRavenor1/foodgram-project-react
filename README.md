@@ -30,6 +30,7 @@ Foodgram это ресурс для публикации рецептов.
 6. POSTGRES_HOST=***ХОСТ, УКАЗАТЬ СЛУЖБУ БД,В НАШЕМ СЛУЧАЕ postgresql_db***
 7. PGADMIN_DEFAULT_EMAIL=***ВАША ПОЧТА***
 8. PGADMIN_DEFAULT_PASSWORD=***ВАШ ПАРОЛЬ***
+9. SPOONACULAR_API_KEY=***Ключ от апи для автоматической загрузки рецептов***https://spoonacular.com/food-api/pricing
 
 Скачать docker: 
 1. Для [windows](https://docs.docker.com/desktop/windows/install/)
